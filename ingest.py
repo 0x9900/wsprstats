@@ -17,7 +17,10 @@ from urllib.request import urlretrieve
 
 import geo
 
-from dbutils import DB_NAME, DBConnect, create_db, WSPR_PATH
+from dbutils import DBConnect
+from dbutils import DB_NAME
+from dbutils import WSPR_PATH
+from dbutils import create_db
 
 logging.basicConfig(
   format='%(asctime)s %(name)s:%(lineno)d %(levelname)s - %(message)s',
