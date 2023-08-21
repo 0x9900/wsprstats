@@ -1,0 +1,2 @@
+# wsprstats
+Experimental project
