@@ -33,7 +33,11 @@ PRAGMA synchronous = EXTRA;
 PRAGMA journal_mode = WAL;
 """
 
-WSPR_PATH = "/Volumes/SSDKey/wspr"
+if os.uname().nodename.endswith('local'):
+  WSPR_PATH = "/Volumes/SSDKey/wspr"
+else:
+  WSPR_PATH = "/var/tmp/wspr"
+
 DB_NAME = os.path.join(WSPR_PATH, "wspr.sqlite")
 
 class DBConnect:
