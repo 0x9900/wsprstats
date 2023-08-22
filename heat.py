@@ -110,8 +110,8 @@ def animate(src, video_file):
     if proc.returncode != 0:
       logging.error('Error generating the video file')
       return
-    logging.info('Move %s to %s', tmp_file, video_file)
-    os.rename(tmp_file, video_file)
+  logging.info('Move %s to %s', tmp_file, video_file)
+  os.rename(tmp_file, video_file)
 
 
 def gen_map(start_date, end_date, filename):
