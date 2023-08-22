@@ -93,7 +93,7 @@ def plot_map(data, filename, end_date):
 
 def animate(src, video_file):
   config = Config()
-  logfile = '/tmp/heat_video.log'
+  logfile = config.get('logfile', '/tmp/heat_video.log')
   tmp_file = f"{video_file}-{os.getpid()}.mp4"
   input_files = os.path.join(src, 'world-*.png')
   in_args = f'-y -framerate 8 -pattern_type glob -i {input_files}'.split()
@@ -150,7 +150,7 @@ def video(opts):
       gen_map(start_date, end, filename)
     start_date = end
 
-  video_file = os.path.join(opts.video_dir, 'world.mp4')
+  video_file = os.path.join(opts.video_dir, opts.video_name)
   animate(dest_dir, video_file)
 
 
@@ -173,7 +173,9 @@ def main():
                        help='Number of days')
   p_video.add_argument('-w', '--workdir', default=config.get('work_path', '/tmp'),
                        help='Working directory')
-  p_video.add_argument('-v', '--video-dir', default=config.get('video_path', '/tmp'),
+  p_video.add_argument('-V', '--video-dir', default=config.get('video_path', '/tmp'),
+                       help='Directory to store the videos')
+  p_video.add_argument('-v', '--video-name', default=config.get('video_name', 'hf-world.mp4'),
                        help='Directory to store the videos')
   p_image = subparsers.add_parser('image')
   p_image.set_defaults(func=image)
