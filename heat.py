@@ -169,16 +169,18 @@ def main():
   subparsers = parser.add_subparsers(required=True)
   p_video = subparsers.add_parser('video')
   p_video.set_defaults(func=video)
-  p_video.add_argument('-d', '--days', type=int, default=8,
+  p_video.add_argument('-d', '--days', type=int, default=7,
                        help='Number of days')
-  p_video.add_argument('-w', '--workdir', default=config.work_path,
+  p_video.add_argument('-w', '--workdir', default=config.get('work_path', '/tmp'),
                        help='Working directory')
-  p_video.add_argument('-v', '--video-dir', default=config.work_path,
+  p_video.add_argument('-v', '--video-dir', default=config.get('video_path', '/tmp'),
                        help='Directory to store the videos')
   p_image = subparsers.add_parser('image')
   p_image.set_defaults(func=image)
-  p_image.add_argument('-d', '--date', required=True, help='Heatmap date [YYYYMMDDHH]')
-  p_image.add_argument('-t', '--target-dir', default='/tmp', help='Directory to store the image')
+  p_image.add_argument('-d', '--date', required=True,
+                       help='Heatmap date [YYYYMMDDHH]')
+  p_image.add_argument('-t', '--target-dir', default=config.get('work_path', '/tmp'),
+                       help='Directory to store the image')
 
   opts = parser.parse_args()
   opts.func(opts)

@@ -51,6 +51,13 @@ class Config:
   def __getattr__(self, attr):
     return self[attr]
 
+  def get(self, key, default=None):
+    if key in self.config_data:
+      return self[key]
+    if default:
+      return default
+    raise KeyError(key)
+
   @staticmethod
   def _read_config(filename):
     with open(filename, 'r', encoding='utf-8') as confd:
