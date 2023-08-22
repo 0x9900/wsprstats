@@ -166,7 +166,7 @@ def image(opts):
 def main():
   config = Config()
   parser = argparse.ArgumentParser(description='DXCC trafic animation')
-  subparsers = parser.add_subparsers()
+  subparsers = parser.add_subparsers(required=True)
   p_video = subparsers.add_parser('video')
   p_video.set_defaults(func=video)
   p_video.add_argument('-d', '--days', type=int, default=8,
