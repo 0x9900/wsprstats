@@ -14,10 +14,9 @@ import numpy as np
 from matplotlib.colors import LinearSegmentedColormap
 from mpl_toolkits.basemap import Basemap
 
+from config import Config
 from dbutils import DBConnect
 
-FFMPEG = 'ffmpeg'
-WORKDIR = '/Volumes/WDPassport/tmp/wspr'
 TIME_INCREMENT = 3600/2
 KEEP_DAYS = 10                  # Maximum number of days we keep the images before they get purged
 FILE_DATE_FORMAT = '%Y%m%d%H%M'
@@ -27,12 +26,12 @@ logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',
                     datefmt='%H:%M:%S',
                     level=logging.INFO)
 
-def load_data(start, end):
+def load_data(db_name, start, end):
   logging.debug('Reading WSPR data...')
   data = []
 
   sql_req = 'SELECT rx_lat, tx_lon, tx_lat, tx_lon FROM wspr WHERE time >= ? and time < ?'
-  with DBConnect() as conn:
+  with DBConnect(db_name) as conn:
     conn.row_factory = None
     curs = conn.cursor()
     result = curs.execute(sql_req, (start.timestamp(), end.timestamp()))
@@ -93,12 +92,13 @@ def plot_map(data, filename, end_date):
 
 
 def animate(src, video_file):
+  config = Config()
   logfile = '/tmp/heat_video.log'
   tmp_file = f"{video_file}-{os.getpid()}.mp4"
   input_files = os.path.join(src, 'world-*.png')
   in_args = f'-y -framerate 8 -pattern_type glob -i {input_files}'.split()
   ou_args = '-c:v libx264 -pix_fmt yuv420p -vf scale=800:600'.split()
-  cmd = [FFMPEG, *in_args, *ou_args, tmp_file]
+  cmd = [config.ffmpeg, *in_args, *ou_args, tmp_file]
   logging.info('Writing ffmpeg output in %s', logfile)
   logging.info("Saving %s video file", tmp_file)
   with open(logfile, "a", encoding='ascii') as err:
@@ -115,7 +115,8 @@ def animate(src, video_file):
 
 
 def gen_map(start_date, end_date, filename):
-  data = load_data(start_date, end_date)
+  config = Config()
+  data = load_data(config.db_name, start_date, end_date)
   if data.size > 0:
     plot_map(data, filename, end_date)
   else:
@@ -163,13 +164,17 @@ def image(opts):
 
 
 def main():
+  config = Config()
   parser = argparse.ArgumentParser(description='DXCC trafic animation')
   subparsers = parser.add_subparsers()
   p_video = subparsers.add_parser('video')
   p_video.set_defaults(func=video)
-  p_video.add_argument('-d', '--days', type=int, default=8, help='Number of days')
-  p_video.add_argument('-w', '--workdir', default=WORKDIR, help='Working directory')
-  p_video.add_argument('-v', '--video-dir', default=WORKDIR, help='Directory to store the videos')
+  p_video.add_argument('-d', '--days', type=int, default=8,
+                       help='Number of days')
+  p_video.add_argument('-w', '--workdir', default=config.work_path,
+                       help='Working directory')
+  p_video.add_argument('-v', '--video-dir', default=config.work_path,
+                       help='Directory to store the videos')
   p_image = subparsers.add_parser('image')
   p_image.set_defaults(func=image)
   p_image.add_argument('-d', '--date', required=True, help='Heatmap date [YYYYMMDDHH]')

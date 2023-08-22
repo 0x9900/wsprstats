@@ -33,16 +33,9 @@ PRAGMA synchronous = EXTRA;
 PRAGMA journal_mode = WAL;
 """
 
-if os.uname().nodename.endswith('local'):
-  WSPR_PATH = "/Volumes/SSDKey/wspr"
-else:
-  WSPR_PATH = "/var/tmp/wspr"
-
-DB_NAME = os.path.join(WSPR_PATH, "wspr.sqlite")
-
 class DBConnect:
 
-  def __init__(self, db_name=DB_NAME, timeout=15):
+  def __init__(self, db_name, timeout=15):
     self.db_name = db_name
     self.timeout = timeout
     self.conn = None

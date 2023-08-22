@@ -1,0 +1,5 @@
+---
+wspr_path: /Volumes/SSDKey/wspr
+db_name: /Volumes/SSDKey/wspr/wspr.sqlite
+work_path: /Volumes/WDPassport/tmp/wspr
+ffmpeg: /opt/local/bin/ffmpeg
