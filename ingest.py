@@ -4,6 +4,7 @@ import gzip
 import logging
 import os
 import re
+import sys
 import time
 
 from argparse import ArgumentParser
@@ -141,7 +142,7 @@ def main():
 
   if not filename or not os.path.exists(filename):
     logging.warning('Nothing to import')
-    return
+    return os.EX_NOINPUT
 
   logging.info('Database: %s', config.db_name)
   if not os.path.exists(config.db_name):
@@ -163,4 +164,8 @@ def main():
 
 
 if __name__ == "__main__":
-  main()
+  try:
+    sys.exit(main())
+  except KeyboardInterrupt as err:
+    logging.info(err)
+    sys.exit(os.EX_OK)
