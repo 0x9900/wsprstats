@@ -77,9 +77,10 @@ def download_archive(path, month=None, force=False):
   target_file = WSPR_FILE.format(today.year, month)
   target_path = os.path.join(path, target_file)
   url = urljoin(WSPR_ARCHIVE, target_file)
+  headers = {b'User-Agent': b'Band & Sun Activity https://bsdworld.org/'}
 
   try:
-    with urlopen(url) as resp:
+    with urlopen(url, headers) as resp:
       if not force and resp.length <= get_size(target_path):
         logging.info('No new data in %s', url)
         return None
