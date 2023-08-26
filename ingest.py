@@ -89,7 +89,7 @@ def download_archive(path, month=None, force=False):
         for buffer in iter(partial(resp.read, BUF_SIZE), b''):
           fdout.write(buffer)
   except URLError as err:
-    logging.info('HTTP Error: "%s"', err)
+    logging.error('HTTP Error: %s (%s)', err, url)
     return None
 
   return target_path
