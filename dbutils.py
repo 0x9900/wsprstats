@@ -48,8 +48,7 @@ class DBConnect:
     self.conn.close()
 
   def connect(self):
-    self.conn = sqlite3.connect(self.db_name, timeout=self.timeout, isolation_level="DEFERRED",
-                                detect_types=sqlite3.PARSE_DECLTYPES)
+    self.conn = sqlite3.connect(self.db_name, timeout=self.timeout, isolation_level="DEFERRED")
     self.conn.row_factory = sqlite3.Row
     return self.conn
 
@@ -58,3 +57,8 @@ def create_db(db_name):
   with DBConnect(db_name) as conn:
     curs = conn.cursor()
     curs.executescript(SQL_TABLE)
+
+def purge(db_name, date):
+  with DBConnect(db_name) as conn:
+    curs = conn.cursor()
+    curs.execute('delete from wspr where time < ?', (date.timestamp(),))

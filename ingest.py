@@ -24,8 +24,7 @@ from config import Config
 
 logging.basicConfig(
   format='%(asctime)s %(name)s:%(lineno)d %(levelname)s - %(message)s',
-  datefmt='%Y-%m-%d %H:%M:%S',
-  level=logging.getLevelName(os.getenv('LEVEL', 'INFO'))
+  datefmt='%x %X', level=logging.getLevelName(os.getenv('LEVEL', 'INFO'))
 )
 
 BUF_SIZE = 2 << 12

@@ -21,10 +21,10 @@ TIME_INCREMENT = 3600/2
 KEEP_DAYS = 10                  # Maximum number of days we keep the images before they get purged
 FILE_DATE_FORMAT = '%Y%m%d%H%M'
 
-
-logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',
-                    datefmt='%H:%M:%S',
-                    level=logging.INFO)
+logging.basicConfig(
+  format='%(asctime)s %(name)s:%(lineno)d %(levelname)s - %(message)s',
+  datefmt='%x %X', level=logging.getLevelName(os.getenv('LEVEL', 'INFO'))
+)
 
 def load_data(db_name, start, end):
   logging.debug('Reading WSPR data...')
